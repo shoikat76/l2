@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: laravel-app
+    runtime: php
+    plan: free
+    region: oregon
+    buildCommand: |
+      apt-get update && apt-get install -y unzip curl php-cli php-mbstring
+      composer install --no-dev --optimize-autoloader
+      php artisan config:cache
+      php artisan migrate --force
+    startCommand: php artisan serve --host 0.0.0.0 --port 10000
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        sync: false
+      - key: DB_CONNECTION
+        value: mysql
